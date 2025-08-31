@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using com.forerunnergames.coa.tools;
 using Godot;
 using NLog;
@@ -6,57 +7,79 @@ namespace com.forerunnergames.coa.player;
 
 public partial class Player : CharacterBody2D
 {
+  [Export] public float WalkSpeed = 100.0f;
+  [Export] public float RunSpeed = 300.0f;
+  [Export] public float HorizontalClimbSpeed = 30.0f;
+  [Export] public float VerticalClimbAcceleration = 1200.0f;
+  [Export] public float VerticalClimbMaxSpeed = 50.0f;
+  [Export] public float Acceleration = 2000.0f;
+  [Export] public float JumpVelocity = -400.0f;
   private static readonly Logger Log = LogManager.GetCurrentClassLogger();
-  private const float Speed = 300.0f;
-  private const float JumpVelocity = -400.0f;
   private readonly float _gravity = ProjectSettings.GetSetting ("physics/2d/default_gravity").AsSingle();
-  private RayCast2D _rayLeft = null!;
-  private RayCast2D _rayRight = null!;
+  private Label _label = null!;
+  private Timer _iceTimer = null!;
+  private readonly List <RayCast2D> _rays = [];
+  private int _iceCollisions;
 
   public override void _Ready()
   {
-    _rayLeft = GetNode <RayCast2D> ("RayCast2D");
-    _rayRight = GetNode <RayCast2D> ("RayCast2D");
+    _label = GetNode <Label> ("Label");
+    _iceTimer = GetNode <Timer> ("IceTimer");
+    for (var i = 1; i <= 12; ++i) _rays.Add (GetNode <RayCast2D> ("RayCast2D" + i));
   }
 
   public override void _PhysicsProcess (double delta)
   {
     var velocity = Velocity;
-    if (!IsOnFloor()) velocity.Y += _gravity * (float)delta;
-    if (Input.IsActionJustPressed ("ui_accept") && IsOnFloor()) velocity.Y = JumpVelocity;
-    var direction = Input.GetVector ("ui_left", "ui_right", "ui_up", "ui_down");
-    velocity.X = direction == Vector2.Zero ? Mathf.MoveToward (Velocity.X, 0, Speed) : direction.X * Speed;
+    var inputDirection = Input.GetVector ("ui_left", "ui_right", "ui_up", "ui_down");
+    var horizontalMovementInput = Mathf.Sign (inputDirection.X) != 0;
+    var jumpInput = Input.IsActionJustPressed ("ui_accept");
+    var speedBoostInput = Input.IsActionPressed ("speed_boost");
+    var climbingInput = Mathf.Sign (inputDirection.Y) == -1;
+    var climbing = climbingInput && _iceTimer.IsStopped();
+    var isOnFloor = IsOnFloor();
+    var startJumping = jumpInput && isOnFloor;
+    var traversing = climbing && horizontalMovementInput && !isOnFloor;
+    var fallVelocity = isOnFloor ? 0.0f : _gravity * (float)delta;
+    var climbVelocity = climbing ? -VerticalClimbAcceleration * (float)delta : 0.0f;
+    var horizontalSpeed = inputDirection.X * (climbing || traversing ? HorizontalClimbSpeed : speedBoostInput ? RunSpeed : WalkSpeed);
+    var horizontalVelocity = Mathf.MoveToward (velocity.X, horizontalSpeed, Acceleration * (float)delta);
+    velocity.X = horizontalVelocity;
+    velocity.Y += fallVelocity + climbVelocity;
+    velocity.Y = climbingInput ? Mathf.Max (velocity.Y, -VerticalClimbMaxSpeed) : velocity.Y;
+    velocity.Y = startJumping ? JumpVelocity : velocity.Y;
     Velocity = velocity;
+    _label.Text = "";
+    _label.Text += $"V ({Velocity.X:F1}, {Velocity.Y:F1}) ";
     MoveAndSlide();
+    for (var i = 0; i < GetSlideCollisionCount(); ++i) HandleCollision (GetSlideCollision (i));
 
-    var collision = GetLastSlideCollision();
+    _iceCollisions = 0;
 
-    if (collision?.GetCollider() is TileMapLayer tileMapLayer1)
+    foreach (var ray in _rays)
     {
-      var (mapCoords1, terrain1) = Tools.GetTileAt (collision.GetPosition(), tileMapLayer1);
-      Log.Debug ("Last slide: {collisionPosition}", collision.GetPosition());
-      Log.Debug ("{terrain} {mapCoords}", terrain1, mapCoords1);
-      if (terrain1 == "Icy Cliff") Log.Debug ("{terrain} {mapCoords}", terrain1, mapCoords1);
-    }
-
-    if (_rayLeft.IsColliding() && _rayLeft.GetCollider() is TileMapLayer tileMapLayer2)
-    {
-      var (mapCoords, terrain) = Tools.GetTileAt (_rayLeft.GetCollisionPoint(), tileMapLayer2);
-      Log.Debug ("Ray left: {rayCollisionPoint}", _rayLeft.GetCollisionPoint());
-      Log.Debug ("{terrain} {mapCoords}", terrain, mapCoords);
+      if (!ray.IsColliding() || ray.GetCollider() is not TileMapLayer tileMapLayer) continue;
+      var (mapCoords, terrain) = Tools.GetTileAt (ray.GetCollisionPoint(), tileMapLayer);
       if (terrain != "Icy Cliff") return;
-      Log.Debug ("{terrain} {mapCoords}", terrain, mapCoords);
-      Log.Debug ("Player collided with tile: {mapCoords} ({terrain})", mapCoords, terrain);
+      _iceCollisions++;
     }
 
-    if (_rayRight.IsColliding() && _rayRight.GetCollider() is TileMapLayer tileMapLayer3)
-    {
-      var (mapCoords, terrain) = Tools.GetTileAt (_rayRight.GetCollisionPoint(), tileMapLayer3);
-      Log.Debug ("Ray right: {rayCollisionPoint}", _rayRight.GetCollisionPoint());
-      Log.Debug ("{terrain} {mapCoords}", terrain, mapCoords);
-      if (terrain != "Icy Cliff") return;
-      Log.Debug ("{terrain} {mapCoords}", terrain, mapCoords);
-      Log.Debug ("Player collided with tile: {mapCoords} ({terrain})", mapCoords, terrain);
-    }
+    if (_iceCollisions == 0 || !_iceTimer.IsStopped()) return;
+    _iceTimer.Start();
+  }
+
+  private void HandleCollision (KinematicCollision2D collision)
+  {
+    if (collision.GetCollider() is not TileMapLayer tileMapLayer1) return;
+    var angleDegrees = Mathf.RadToDeg (collision.GetAngle (Vector2.Up));
+    var (mapCoords, terrain) = Tools.GetTileAt (collision.GetPosition(), tileMapLayer1);
+    Log.Debug ("Last slide: {collisionPosition}", collision.GetPosition());
+    Log.Debug ("{terrain} {mapCoords}", terrain, mapCoords);
+    Log.Debug ("{terrain} {mapCoords}", terrain, mapCoords);
+    _label.Text += $"Collider: {terrain} {mapCoords}, Angle: {angleDegrees}";
+    if (terrain != "Icy Cliff") return;
+    var isGroundIce = Mathf.IsZeroApprox (angleDegrees);
+    if (isGroundIce) return;
+    _iceCollisions++;
   }
 }
