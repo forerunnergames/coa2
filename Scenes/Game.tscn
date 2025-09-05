@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=4 uid="uid://cqkc1i7njmol4"]
+[gd_scene load_steps=12 format=4 uid="uid://cqkc1i7njmol4"]
 
 [ext_resource type="Script" uid="uid://cbayaomyv7jko" path="res://Scripts/Player.cs" id="1_3264r"]
 [ext_resource type="Script" uid="uid://dxbpes03353fg" path="res://Scripts/Game.cs" id="1_sp8h3"]
@@ -1195,9 +1195,6 @@ sources/2 = SubResource("TileSetAtlasSource_locft")
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_h7afp"]
 size = Vector2(40, 71)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_880ck"]
-size = Vector2(1152, 20)
-
 [node name="Game" type="Node2D"]
 script = ExtResource("1_sp8h3")
 metadata/_edit_horizontal_guides_ = [-128.32, -255.317]
@@ -1319,16 +1316,6 @@ autowrap_mode = 2
 process_callback = 0
 wait_time = 0.25
 one_shot = true
-
-[node name="Ground" type="StaticBody2D" parent="."]
-z_index = -2
-collision_layer = 2
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Ground"]
-z_index = 2
-position = Vector2(0, 14)
-shape = SubResource("RectangleShape2D_880ck")
-disabled = true
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
