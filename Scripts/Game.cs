@@ -22,10 +22,11 @@ public partial class Game : Node2D
 
   public override void _Input (InputEvent @event)
   {
+    if (Input.IsActionJustPressed ("toggle_debug_Text")) _label.Visible = !_label.Visible;
     var (mapCoords, terrain) = Tools.GetTileAt (ToLocal (_player.GlobalPosition), _tileMapLayer);
     var (mapCoords2, terrain2) = Tools.GetTileAt (GetLocalMousePosition(), _tileMapLayer);
     _label.Text = $"Mouse in Tile: {mapCoords2} ({terrain2}), Player: {mapCoords} ({terrain}), Local Mouse Coords: {GetLocalMousePosition()}";
-    if (!Input.IsActionJustReleased ("Click")) return;
+    if (!Input.IsActionJustReleased ("click")) return;
     Log.Debug ("Player center is at: {mapCoords} ({terrain})", mapCoords, terrain);
     Log.Debug ("Clicked {mapCoords2} ({terrain2})", mapCoords2, terrain2);
     _tileMapLayer.SetCell (mapCoords2);

@@ -28,6 +28,12 @@ public partial class Player : CharacterBody2D
     for (var i = 1; i <= 12; ++i) _rays.Add (GetNode <RayCast2D> ("RayCast2D" + i));
   }
 
+  public override void _Input (InputEvent @event)
+  {
+    if (!Input.IsActionJustPressed ("toggle_debug_Text")) return;
+    _label.Visible = !_label.Visible;
+  }
+
   public override void _PhysicsProcess (double delta)
   {
     var velocity = Velocity;
@@ -53,13 +59,12 @@ public partial class Player : CharacterBody2D
     _label.Text += $"V ({Velocity.X:F1}, {Velocity.Y:F1}) ";
     MoveAndSlide();
     for (var i = 0; i < GetSlideCollisionCount(); ++i) HandleCollision (GetSlideCollision (i));
-
     _iceCollisions = 0;
 
     foreach (var ray in _rays)
     {
       if (!ray.IsColliding() || ray.GetCollider() is not TileMapLayer tileMapLayer) continue;
-      var (mapCoords, terrain) = Tools.GetTileAt (ray.GetCollisionPoint(), tileMapLayer);
+      var (_, terrain) = Tools.GetTileAt (ray.GetCollisionPoint(), tileMapLayer);
       if (terrain != "Icy Cliff") return;
       _iceCollisions++;
     }
@@ -76,7 +81,7 @@ public partial class Player : CharacterBody2D
     Log.Debug ("Last slide: {collisionPosition}", collision.GetPosition());
     Log.Debug ("{terrain} {mapCoords}", terrain, mapCoords);
     Log.Debug ("{terrain} {mapCoords}", terrain, mapCoords);
-    _label.Text += $"Collider: {terrain} {mapCoords}, Angle: {angleDegrees}";
+    _label.Text += $"Collider: {terrain} {mapCoords}, Angle: {angleDegrees} ";
     if (terrain != "Icy Cliff") return;
     var isGroundIce = Mathf.IsZeroApprox (angleDegrees);
     if (isGroundIce) return;
