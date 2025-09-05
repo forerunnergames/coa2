@@ -1,0 +1,49 @@
+[gd_scene load_steps=4 format=3 uid="uid://b4pknbk3nohjh"]
+
+[ext_resource type="Script" uid="uid://cbayaomyv7jko" path="res://Scripts/Player.cs" id="1_kyqiw"]
+[ext_resource type="Texture2D" uid="uid://bbj2dq1wofxm3" path="res://icon.svg" id="2_gntrk"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_h7afp"]
+size = Vector2(40, 71)
+
+[node name="Player" type="CharacterBody2D"]
+collision_mask = 6
+slide_on_ceiling = false
+script = ExtResource("1_kyqiw")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 0.5)
+shape = SubResource("RectangleShape2D_h7afp")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+offset = Vector2(0, -100)
+zoom = Vector2(2, 2)
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.25, 0.5)
+texture = ExtResource("2_gntrk")
+
+[node name="RayCast2D1" type="RayCast2D" parent="."]
+rotation = 1.5708
+target_position = Vector2(6.10352e-05, 21)
+collision_mask = 8
+
+[node name="RayCast2D2" type="RayCast2D" parent="."]
+rotation = -1.5708
+target_position = Vector2(-9.15527e-05, 21)
+collision_mask = 8
+
+[node name="RayCast2D3" type="RayCast2D" parent="."]
+rotation = 1.5708
+target_position = Vector2(-36, 0.00012207)
+collision_mask = 8
+
+[node name="RayCast2D4" type="RayCast2D" parent="."]
+rotation = -1.5708
+target_position = Vector2(-37, -0.000137329)
+collision_mask = 8
+
+[node name="IceTimer" type="Timer" parent="."]
+process_callback = 0
+wait_time = 0.25
+one_shot = true
