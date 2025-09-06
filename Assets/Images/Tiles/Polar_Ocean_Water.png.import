@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://djgupsvaac5lj"
-path="res://.godot/imported/Scaffolding_Traps_And_Containers.png-d8794edf843b8d033eb830b142551263.ctex"
+uid="uid://dblc5j1lew26v"
+path="res://.godot/imported/Polar_Ocean_Water.png-f11d44896d74d9e25707d05dbc6a19a7.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Scaffolding_Traps_And_Containers.png"
-dest_files=["res://.godot/imported/Scaffolding_Traps_And_Containers.png-d8794edf843b8d033eb830b142551263.ctex"]
+source_file="res://Assets/Images/Tiles/Polar_Ocean_Water.png"
+dest_files=["res://.godot/imported/Polar_Ocean_Water.png-f11d44896d74d9e25707d05dbc6a19a7.ctex"]
 
 [params]
 

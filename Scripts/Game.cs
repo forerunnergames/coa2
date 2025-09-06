@@ -1,11 +1,12 @@
 using com.forerunnergames.coa.player;
-using com.forerunnergames.coa.tools;
 using com.forerunnergames.coa.ui;
+using com.forerunnergames.coa.utilities;
 using Godot;
 using NLog;
 
 namespace com.forerunnergames.coa.game;
 
+// Autoload
 public partial class Game : Node2D
 {
   private static readonly Logger Log = LogManager.GetCurrentClassLogger();

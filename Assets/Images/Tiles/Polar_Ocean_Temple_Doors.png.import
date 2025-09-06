@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dblc5j1lew26v"
-path="res://.godot/imported/Polar_Ocean_Water.png-61d7db881c0023dce1b779592bae8691.ctex"
+uid="uid://qb00qrf68ufc"
+path="res://.godot/imported/Polar_Ocean_Temple_Doors.png-1d4ca81696437880ac1e2e7e3db7d82e.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Polar_Ocean_Water.png"
-dest_files=["res://.godot/imported/Polar_Ocean_Water.png-61d7db881c0023dce1b779592bae8691.ctex"]
+source_file="res://Assets/Images/Tiles/Polar_Ocean_Temple_Doors.png"
+dest_files=["res://.godot/imported/Polar_Ocean_Temple_Doors.png-1d4ca81696437880ac1e2e7e3db7d82e.ctex"]
 
 [params]
 

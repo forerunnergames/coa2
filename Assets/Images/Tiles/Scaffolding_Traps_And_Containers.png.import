@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://d2igo8wpsg636"
-path="res://.godot/imported/Mountain.png-fcec10ab274d5f02708fa97455dc672e.ctex"
+uid="uid://djgupsvaac5lj"
+path="res://.godot/imported/Scaffolding_Traps_And_Containers.png-c7ddc3f03a4155d0a8067e37569b526b.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Mountain.png"
-dest_files=["res://.godot/imported/Mountain.png-fcec10ab274d5f02708fa97455dc672e.ctex"]
+source_file="res://Assets/Images/Tiles/Scaffolding_Traps_And_Containers.png"
+dest_files=["res://.godot/imported/Scaffolding_Traps_And_Containers.png-c7ddc3f03a4155d0a8067e37569b526b.ctex"]
 
 [params]
 

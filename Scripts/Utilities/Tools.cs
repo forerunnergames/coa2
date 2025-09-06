@@ -1,7 +1,7 @@
 using Godot;
 using NLog;
 
-namespace com.forerunnergames.coa.tools;
+namespace com.forerunnergames.coa.utilities;
 
 public static class Tools
 {

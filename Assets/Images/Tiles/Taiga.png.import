@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://f8jmprxxbrju"
-path="res://.godot/imported/pico 8 tiles.png-a97470d23bf46933471a1ebdcb72dd03.ctex"
+uid="uid://bbiey0wjfmk7f"
+path="res://.godot/imported/Taiga.png-3caabbe0874e7d081e728719445d1350.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/pico 8 tiles.png"
-dest_files=["res://.godot/imported/pico 8 tiles.png-a97470d23bf46933471a1ebdcb72dd03.ctex"]
+source_file="res://Assets/Images/Tiles/Taiga.png"
+dest_files=["res://.godot/imported/Taiga.png-3caabbe0874e7d081e728719445d1350.ctex"]
 
 [params]
 

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dk1pe44hjkvyr"
-path="res://.godot/imported/Polar_Ocean_Temple.png-38a5a32e35e0e060c37a3ed731897015.ctex"
+uid="uid://dyylxkyhohu5e"
+path="res://.godot/imported/Tundra.png-b860521ae288d6974b1de83a1a9aac3a.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Polar_Ocean_Temple.png"
-dest_files=["res://.godot/imported/Polar_Ocean_Temple.png-38a5a32e35e0e060c37a3ed731897015.ctex"]
+source_file="res://Assets/Images/Tiles/Tundra.png"
+dest_files=["res://.godot/imported/Tundra.png-b860521ae288d6974b1de83a1a9aac3a.ctex"]
 
 [params]
 

@@ -1,0 +1,31 @@
+[gd_scene load_steps=6 format=3 uid="uid://cibydvnhc6cyx"]
+
+[ext_resource type="Script" uid="uid://cbayaomyv7jko" path="res://Scripts/Player/Player.cs" id="1_x601d"]
+[ext_resource type="PackedScene" uid="uid://b4pknbk3nohjh" path="res://Scenes/Player/PlayerBody.tscn" id="2_dewec"]
+[ext_resource type="PackedScene" uid="uid://cugukybiaggac" path="res://Scenes/Player/PlayerLeftHand.tscn" id="3_5ixxa"]
+[ext_resource type="PackedScene" uid="uid://bf3ems57ic2qr" path="res://Scenes/Player/PlayerRightHand.tscn" id="4_nn08x"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_jmcll"]
+absorbent = true
+
+[node name="Player" type="Node2D"]
+script = ExtResource("1_x601d")
+
+[node name="PlayerBody" parent="." node_paths=PackedStringArray("LeftHand", "RightHand") instance=ExtResource("2_dewec")]
+physics_material_override = SubResource("PhysicsMaterial_jmcll")
+lock_rotation = true
+LeftHand = NodePath("../PlayerLeftHand")
+RightHand = NodePath("../PlayerRightHand")
+VerticalClimbAcceleration = 1000.0
+VerticalClimbMaxSpeed = 1000.0
+
+[node name="PlayerLeftHand" parent="." instance=ExtResource("3_5ixxa")]
+position = Vector2(-24, -48)
+
+[node name="LeftHandPinJoint" type="PinJoint2D" parent="PlayerLeftHand"]
+node_a = NodePath("../../PlayerBody")
+node_b = NodePath("..")
+bias = 0.9
+
+[node name="PlayerRightHand" parent="." instance=ExtResource("4_nn08x")]
+position = Vector2(24, -48)
