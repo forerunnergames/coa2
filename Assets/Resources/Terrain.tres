@@ -1,8 +1,11 @@
-[gd_resource type="TileSet" load_steps=7 format=3 uid="uid://dnsjmr0uwpitu"]
+[gd_resource type="TileSet" load_steps=8 format=3 uid="uid://dnsjmr0uwpitu"]
 
-[ext_resource type="Texture2D" uid="uid://d2igo8wpsg636" path="res://Assets/Mountain.png" id="1_o3too"]
-[ext_resource type="Texture2D" uid="uid://bbiey0wjfmk7f" path="res://Assets/Taiga.png" id="2_ufhks"]
-[ext_resource type="Texture2D" uid="uid://bbmkvadlbapvm" path="res://Assets/Polar_Ocean_Glacier_Underwater.png" id="3_xawvv"]
+[ext_resource type="Texture2D" uid="uid://d2igo8wpsg636" path="res://Assets/Images/Tiles/Mountain.png" id="1_o3too"]
+[ext_resource type="Texture2D" uid="uid://bbiey0wjfmk7f" path="res://Assets/Images/Tiles/Taiga.png" id="2_ufhks"]
+[ext_resource type="Texture2D" uid="uid://bbmkvadlbapvm" path="res://Assets/Images/Tiles/Polar_Ocean_Glacier_Underwater.png" id="3_xawvv"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_o3too"]
+absorbent = true
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_tib1g"]
 texture = ExtResource("1_o3too")
@@ -1180,6 +1183,7 @@ tile_size = Vector2i(8, 8)
 physics_layer_0/collision_layer = 8
 physics_layer_0/collision_mask = 0
 physics_layer_1/collision_layer = 4
+physics_layer_1/physics_material = SubResource("PhysicsMaterial_o3too")
 terrain_set_0/mode = 0
 terrain_set_0/terrain_0/name = "Icy Cliff"
 terrain_set_0/terrain_0/color = Color(0.592157, 0.74902, 0.988235, 1)

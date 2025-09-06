@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dyylxkyhohu5e"
-path="res://.godot/imported/Tundra.png-647e57a761009ee7607beecf4ac8a979.ctex"
+uid="uid://d2igo8wpsg636"
+path="res://.godot/imported/Mountain.png-c1f676762f5377b1b53a29d7e2d883bb.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Tundra.png"
-dest_files=["res://.godot/imported/Tundra.png-647e57a761009ee7607beecf4ac8a979.ctex"]
+source_file="res://Assets/Images/Tiles/Mountain.png"
+dest_files=["res://.godot/imported/Mountain.png-c1f676762f5377b1b53a29d7e2d883bb.ctex"]
 
 [params]
 
