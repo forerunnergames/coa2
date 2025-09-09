@@ -1,0 +1,33 @@
+[gd_scene load_steps=5 format=3 uid="uid://cibydvnhc6cyx"]
+
+[ext_resource type="Script" uid="uid://cbayaomyv7jko" path="res://Scripts/Player/Player.cs" id="1_x601d"]
+[ext_resource type="PackedScene" uid="uid://b4pknbk3nohjh" path="res://Scenes/Player/PlayerBody.tscn" id="2_dewec"]
+[ext_resource type="PackedScene" uid="uid://cn6o87qfhtt23" path="res://Scenes/Player/PlayerBodyAnchor.tscn" id="3_ude3g"]
+[ext_resource type="PackedScene" uid="uid://dhafhai8evdhc" path="res://Scenes/Player/PlayerHand.tscn" id="6_4wape"]
+
+[node name="Player" type="Node2D"]
+script = ExtResource("1_x601d")
+
+[node name="PlayerBody" parent="." node_paths=PackedStringArray("LeftHand", "RightHand") instance=ExtResource("2_dewec")]
+LeftHand = NodePath("../PlayerLeftHand")
+RightHand = NodePath("../PlayerRightHand")
+AnchorPath = NodePath("../PlayerBodyAnchor")
+VerticalClimbAcceleration = 1000.0
+VerticalClimbMaxSpeed = 1000.0
+
+[node name="PlayerBodyAnchor" parent="." node_paths=PackedStringArray("Character", "LeftHand", "RightHand") instance=ExtResource("3_ude3g")]
+Character = NodePath("../PlayerBody")
+LeftHand = NodePath("../PlayerLeftHand")
+RightHand = NodePath("../PlayerRightHand")
+
+[node name="PlayerLeftHand" parent="." instance=ExtResource("6_4wape")]
+position = Vector2(-24, -48)
+mass = 0.45
+linear_damp = 0.0
+angular_damp = 0.0
+
+[node name="PlayerRightHand" parent="." instance=ExtResource("6_4wape")]
+position = Vector2(24, -48)
+mass = 0.45
+linear_damp = 0.0
+angular_damp = 0.0

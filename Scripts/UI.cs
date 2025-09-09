@@ -10,7 +10,7 @@ public partial class UI : CanvasLayer
 
   public override void _Ready()
   {
-    _debugLabel = GetNode <Label> ("%DebugLabel");
+    _debugLabel = GetNode <Label> ("DebugLabel");
     _debugLabel.Hide();
   }
 

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://mjq5ccagc0qe"
-path="res://.godot/imported/Polar_Ocean_Glacier.png-9894aaf79cba0039c025e4fde1711555.ctex"
+uid="uid://f8jmprxxbrju"
+path="res://.godot/imported/pico 8 tiles.png-1018acc1ce94433943a52a336eb8b485.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Polar_Ocean_Glacier.png"
-dest_files=["res://.godot/imported/Polar_Ocean_Glacier.png-9894aaf79cba0039c025e4fde1711555.ctex"]
+source_file="res://Assets/Images/Tiles/pico 8 tiles.png"
+dest_files=["res://.godot/imported/pico 8 tiles.png-1018acc1ce94433943a52a336eb8b485.ctex"]
 
 [params]
 
