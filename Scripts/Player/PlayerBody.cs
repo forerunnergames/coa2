@@ -13,11 +13,9 @@ public partial class PlayerBody : CharacterBody2D
   [Export] public PlayerHand LeftHand = null!;
   [Export] public PlayerHand RightHand = null!;
   [Export] public NodePath AnchorPath = null!;
+  [Export] public PlayerAnimator Animator = null!;
   [Export] public float WalkSpeed = 100.0f;
   [Export] public float RunSpeed = 300.0f;
-  [Export] public float HorizontalClimbSpeed = 30.0f;
-  [Export] public float VerticalClimbAcceleration = 1200.0f;
-  [Export] public float VerticalClimbMaxSpeed = 50.0f;
   [Export] public float Acceleration = 2000.0f;
   [Export] public float JumpVelocity = -400.0f;
   public bool IsFollowing { get; set; }
@@ -25,18 +23,20 @@ public partial class PlayerBody : CharacterBody2D
   private Game _game = null!;
   private Timer _iceTimer = null!; // Forces a short fall after slipping on ice, before being allowed to climb again.
   private RigidBody2D _anchor = null!;
-  private CollisionShape2D _bodyCollider = null!;
+  private CollisionShape2D _collider = null!;
   private readonly List <RayCast2D> _rays = [];
   private int _iceCollisions;
-  public void SetBodyCollisionEnabled (bool enabled) => _bodyCollider.Disabled = !enabled;
+  private bool _wasOnFloor;
+  private Vector2 _previousVelocity = Vector2.Zero;
+  public void SetBodyCollisionEnabled (bool enabled) => _collider.Disabled = !enabled;
 
   public override void _Ready()
   {
     _game = GetNode <Game> ("/root/Game");
+    _collider = GetNode <CollisionShape2D> ("CollisionShape2D");
     _iceTimer = GetNode <Timer> ("IceTimer");
-    for (var i = 1; i <= 4; ++i) _rays.Add (GetNode <RayCast2D> ("RayCast2D" + i));
     _anchor = GetNode <RigidBody2D> (AnchorPath);
-    _bodyCollider = GetNode <CollisionShape2D> ("BodyCollider");
+    for (var i = 1; i <= 4; ++i) _rays.Add (GetNode <RayCast2D> ("RayCast2D" + i));
   }
 
   public override void _PhysicsProcess (double delta)
@@ -48,6 +48,7 @@ public partial class PlayerBody : CharacterBody2D
     var speedBoostInput = Input.IsActionPressed ("speed_boost");
     var isIceTimerStopped = _iceTimer.IsStopped();
     var isOnFloor = IsOnFloor();
+    var landed = !_wasOnFloor && isOnFloor;
     var startJumping = jumpInput && isOnFloor;
     var fallVelocity = isOnFloor ? 0.0f : Settings.Gravity * (float)delta;
     var horizontalSpeed = inputDirection.X * (speedBoostInput ? RunSpeed : WalkSpeed);
@@ -60,7 +61,10 @@ public partial class PlayerBody : CharacterBody2D
     LeftHand.IsIceTimerStopped = isIceTimerStopped;
     RightHand.IsIceTimerStopped = isIceTimerStopped;
     Velocity = velocity;
-    _game.SetDebugText ($"Velocity: ({Velocity.X:F1}, {Velocity.Y:F1})");
+    Animator.UpdateFromCharacterBody (Velocity, inputDirection.X, speedBoostInput, isOnFloor, landed, startJumping);
+    _game.SetDebugText ($"Velocity: ({Velocity.X:F1}, {Velocity.Y:F1}), IsOnFloor: {isOnFloor}, Animation: {Animator.CurrentAnimation}");
+    _wasOnFloor = isOnFloor;
+    _previousVelocity = Velocity;
     MoveAndSlide();
     HandleKinematicCollisions();
     HandleIceCollisions();
@@ -78,7 +82,7 @@ public partial class PlayerBody : CharacterBody2D
     var (mapCoords, terrain) = Tools.GetTileAt (collision.GetPosition(), tileMapLayer);
     // Log.Debug ("Last slide: {collisionPosition}", collision.GetPosition());
     // Log.Debug ("{terrain} {mapCoords}", terrain, mapCoords);
-    _game.SetDebugText ($"Collider: {terrain} {mapCoords}, Angle: {angleDegrees}");
+    // _game.SetDebugText ($"Collider: {terrain} {mapCoords}, Angle: {angleDegrees}");
   }
 
   // We handle these separately using ray casts because the player doesn't actually collide with ice tiles (physics layer is masked out).
@@ -116,6 +120,7 @@ public partial class PlayerBody : CharacterBody2D
 
   public void StartIceSlipCooldown()
   {
-    if (_iceTimer.IsStopped()) _iceTimer.Start();
+    if (!_iceTimer.IsStopped()) return;
+    _iceTimer.Start();
   }
 }

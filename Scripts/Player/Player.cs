@@ -16,7 +16,8 @@ public partial class Player : Node2D
   private PlayerBody _characterBody = null!;
   private PlayerHand _leftHand = null!;
   private PlayerHand _rightHand = null!;
-  private PlayerBodyAnchor _anchor = null!;
+  private PlayerBodyAnchor _bodyAnchor = null!;
+  private PlayerAnimator _animator = null!;
   private CircleShape2D _handIceDetector = null!;
   private bool _justSlippedOnIce;
   private Dictionary <GrabDirection, Vector2> _grabDirectionsToOffsets = null!;
@@ -44,8 +45,9 @@ public partial class Player : Node2D
     _characterBody = GetNode <PlayerBody> ("PlayerBody");
     _leftHand = GetNode <PlayerHand> ("PlayerLeftHand");
     _rightHand = GetNode <PlayerHand> ("PlayerRightHand");
-    _anchor = GetNode <PlayerBodyAnchor> ("PlayerBodyAnchor");
-    _characterBody.AnchorPath = _anchor.GetPath(); // Let body know where the anchor is for follow mode.
+    _bodyAnchor = GetNode <PlayerBodyAnchor> ("PlayerBodyAnchor");
+    _animator = GetNode <PlayerAnimator> ("PlayerAnimator");
+    _characterBody.AnchorPath = _bodyAnchor.GetPath(); // Let body know where the anchor is for follow mode.
     _handIceDetector = new CircleShape2D { Radius = HandIceDetectionRadius }; // TODO Create in editor.
 
     _grabDirectionsToOffsets = new Dictionary <GrabDirection, Vector2>
@@ -84,7 +86,7 @@ public partial class Player : Node2D
 
   private void CheckStartFollowing()
   {
-    if (!_anchor.IsFollowingCharacter) return;
+    if (!_bodyAnchor.IsFollowing) return;
     StartFollowing();
   }
 
@@ -96,20 +98,22 @@ public partial class Player : Node2D
 
   private void StartFollowing()
   {
-    _anchor.SetFollowingCharacter (false); // Dynamic, joints can pull anchor.
+    _bodyAnchor.SetFollowing (false); // Dynamic, joints can pull anchor.
     _characterBody.IsFollowing = true; // Character follows anchor.
     _characterBody.SetBodyCollisionEnabled (false); // avoid double-collisions with world
+    _animator.SetFollowTarget (_bodyAnchor);
   }
 
   // Reset character rotation & velocity, & set the CharacterBody2D to lead while the anchor body follows.
   private void StopFollowing()
   {
     _characterBody.Rotation = 0.0f;
-    _anchor.Rotation = 0.0f;
-    _anchor.AngularVelocity = 0.0f;
-    _anchor.SetFollowingCharacter (true);
+    _bodyAnchor.Rotation = 0.0f;
+    _bodyAnchor.AngularVelocity = 0.0f;
+    _bodyAnchor.SetFollowing (true);
     _characterBody.IsFollowing = false;
     _characterBody.SetBodyCollisionEnabled (true);
+    _animator.SetFollowTarget (_characterBody);
   }
 
   private void ReleaseAllGrabs()
@@ -124,7 +128,7 @@ public partial class Player : Node2D
     StopFollowing();
     _characterBody.Velocity = Vector2.Zero;
     _characterBody.GlobalPosition = SpawnPosition;
-    _anchor.LinearVelocity = Vector2.Zero;
+    _bodyAnchor.LinearVelocity = Vector2.Zero;
   }
 
   private Vector2 CalculateGrabLocation (Vector2 fromWorld, GrabDirection direction)
